@@ -27,10 +27,24 @@ class Move(object):
                                  (pos[0], pos[1]+1),
                                  (pos[0], pos[1]-1)]
         elif type in ("帅", "将"):
+            # 普通移动
             can_moves = [(pos[0] + 1, pos[1]),
                          (pos[0] - 1, pos[1]),
                          (pos[0], pos[1] + 1),
                          (pos[0], pos[1] - 1)]
+            # 飞将
+            col_piece_list = []
+            for row in range(10):  # 得到将/帅所处那一列的所有棋子
+                if board.iloc[row, pos[1]]:
+                    col_piece_list.append((board.iloc[row, pos[1]], (row, pos[1])))  # (棋子类型, (棋子位置))
+            # 判断是否可以飞将
+            index = col_piece_list.index((type, pos))  # 得到本棋子的索引
+            if (index+1) < len(col_piece_list):
+                if col_piece_list[index+1][0] in ("帅", "将"):
+                    can_moves.append(col_piece_list[index+1][1])
+            elif (index-1) > -1:
+                if col_piece_list[index - 1][0] in ("帅", "将"):
+                    can_moves.append(col_piece_list[index - 1][1])
         elif type in ("仕", "士"):
             can_moves = [(pos[0] + 1, pos[1] + 1),
                          (pos[0] + 1, pos[1] - 1),
@@ -138,6 +152,7 @@ class Move(object):
 
     def can_move(self, selected, can_moves, faction, board):
         """过滤可移动路径, selected:被选中的棋子, can_moves:能够移动的位置列表, faction:阵营轮次, board:棋盘"""
+        print(can_moves)
         can_move_path = []  # 能够移动的位置
         type, pos = selected
         for can_move in can_moves:
@@ -146,8 +161,7 @@ class Move(object):
                 if type in ("兵", "卒", "馬", "马", "車", "车", "炮", "砲"):
                     pass
                 elif type in ("帅", "将"):
-                    if (7 <= can_move[0] and 3 <= can_move[1] <= 5) or (
-                            can_move[0] <= 2 and 3 <= can_move[1] <= 5):  # 位于方框内
+                    if (7 <= can_move[0] or can_move[0] <= 2) and 3 <= can_move[1] <= 5:  # 位于方框内
                         pass
                     else: continue
                 elif type in ("仕", "士"):

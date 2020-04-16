@@ -35,5 +35,26 @@ PIECE_INFOS = {  # 棋子信息
             "卒": "./resources/黑卒.png"
         }
     },
+    "FEN": {
+        "帅": "K",
+        "仕": "A",
+        "相": "B",
+        "馬": "N",
+        "車": "R",
+        "炮": "C",
+        "兵": "P",
+        "将": "k",
+        "士": "a",
+        "象": "b",
+        "马": "n",
+        "车": "r",
+        "砲": "c",
+        "卒": "p",
+        "红": "w",
+        "黑": "b"
+    }
 }
 PIECE_BOARD_IMAGE_PATH = "./resources/棋子.png"  # 棋子背景图片
+HEADERS = {  # 网络请求头
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"
+}

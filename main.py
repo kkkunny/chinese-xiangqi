@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from image import *
 from move import *
+from robot import *
+from random import choice
 
 
 class Main(object):
@@ -39,6 +41,9 @@ class Main(object):
         self.selected = ["", ()]  # 选中的棋子[棋子名, 位置[行, 列]]
         self.faction = True  # 阵营轮次 True:红棋 False:黑棋
 
+        # 机器人
+        self.robot = Robot(not(self.player))
+
     def game(self):
         """正式游戏"""
         # 将棋盘转变为FEN
@@ -57,6 +62,25 @@ class Main(object):
         if self.selected[0]:
             self.image.load("./resources/selected.png", self.pos_to_position(self.selected[1]))
             self.get_move()  # 棋子移动
+        # 机器人
+        robot_faction = not(self.player)
+        if self.faction == robot_faction:
+            self.fen = make_fen(self.board, self.round, self.faction)
+            moves = self.robot.spider(fen=self.fen)  # 获得移动位置
+            if moves:
+                self.selected = [self.board.iloc[moves[0][1], moves[0][0]], (moves[0][1], moves[0][0])]
+                self.move(self.selected, (moves[1][1], moves[1][0]))  # 移动棋子
+            else:  # API无最佳走法
+                while True:
+                    random_pos = choice(self.cur_piece_poss)
+                    if (robot_faction and self.board.iloc[random_pos] in list(PIECE_INFOS["name"])) or (not robot_faction and self.board.iloc[random_pos] not in list(PIECE_INFOS["name"])):
+                        self.selected = [self.board.iloc[random_pos], random_pos]  # 随机子
+                        self.can_move = []  # 可移动坐标
+                        self.get_move()  # 获得可移动路径
+                        moves = choice(self.can_move)
+                        break
+                self.move(self.selected, moves)  # 移动棋子
+
         # 判定输赢
         self.decide_win()
 
@@ -81,7 +105,6 @@ class Main(object):
                             position = self.pos_to_position(pos)
                             if position[0] < mouse_pos[0] < position[0]+int(86*SIZE_TIME) and position[1] < mouse_pos[1] < position[1]+int(86*SIZE_TIME):
                                 self.move(self.selected, pos)  # 移动棋子
-                                self.selected = ["", ()]  # 清空选中的棋子[棋子名, 位置[行, 列]]
 
     def get_move(self):
         """获得可移动棋子路径"""
@@ -97,6 +120,8 @@ class Main(object):
         if not self.faction & self.player:  # 轮次加1
             self.round += 1
         self.faction = not(self.faction)  # 轮到另一方阵营
+        if self.selected[0]:
+            self.selected = ["", ()]  # 清空选中的棋子[棋子名, 位置[行, 列]]
 
     def pos_to_position(self, pos):
         """将矩阵点转换为像素点（左上角）, pos:矩阵点"""

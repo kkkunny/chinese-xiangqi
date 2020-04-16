@@ -152,7 +152,6 @@ class Move(object):
 
     def can_move(self, selected, can_moves, faction, board):
         """过滤可移动路径, selected:被选中的棋子, can_moves:能够移动的位置列表, faction:阵营轮次, board:棋盘"""
-        print(can_moves)
         can_move_path = []  # 能够移动的位置
         type, pos = selected
         for can_move in can_moves:

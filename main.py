@@ -95,7 +95,7 @@ class Main(object):
                 # 选中棋子
                 for pos in self.cur_piece_poss:  # 是否选中现有棋子
                     position = self.pos_to_position(pos)
-                    if position[0] < mouse_pos[0] < position[0]+int(86*SIZE_TIME) and position[1] < mouse_pos[1] < position[1]+int(86*SIZE_TIME):
+                    if position[0] < mouse_pos[0] < position[0]+int(PIECE_SIZE[0]*SIZE_TIME) and position[1] < mouse_pos[1] < position[1]+int(PIECE_SIZE[0]*SIZE_TIME):
                         piece_faction = self.move_path.get_piece_faction(self.board.iloc[pos])
                         if (piece_faction == "红" and self.faction) or (piece_faction == "黑" and not self.faction):  # 阵营相同
                             self.selected = [self.board.iloc[pos], pos]
@@ -103,7 +103,7 @@ class Main(object):
                     if len(self.can_move) != 0:  # 能够移动
                         for pos in self.can_move:
                             position = self.pos_to_position(pos)
-                            if position[0] < mouse_pos[0] < position[0]+int(86*SIZE_TIME) and position[1] < mouse_pos[1] < position[1]+int(86*SIZE_TIME):
+                            if position[0] < mouse_pos[0] < position[0]+int(PIECE_SIZE[0]*SIZE_TIME) and position[1] < mouse_pos[1] < position[1]+int(PIECE_SIZE[0]*SIZE_TIME):
                                 self.move(self.selected, pos)  # 移动棋子
 
     def get_move(self):
@@ -126,7 +126,7 @@ class Main(object):
     def pos_to_position(self, pos):
         """将矩阵点转换为像素点（左上角）, pos:矩阵点"""
         position = self.board_position.iloc[pos]
-        position = (position[1]-int(43*SIZE_TIME)+EDGE_DISTANCE, position[0]-int(43*SIZE_TIME)+EDGE_DISTANCE)
+        position = (position[1]-int((PIECE_SIZE[0]//2)*SIZE_TIME)+EDGE_DISTANCE, position[0]-int((PIECE_SIZE[0]//2)*SIZE_TIME)+EDGE_DISTANCE)
         return position
 
     def game_win(self):
@@ -146,10 +146,10 @@ class Main(object):
 
     def display_piece(self, name, pos):
         """在棋盘中显示棋子, name:棋子名, pos:位置"""
-        for faction in PIECE_INFOS["image"]:
-            for type in PIECE_INFOS["image"][faction]:
+        for faction in ("黑", "红"):
+            for type in self.image.piece_image_pos[faction]:
                 if type == name:
-                    self.image.load_piece(PIECE_INFOS["image"][faction][type], self.pos_to_position(pos))
+                    self.image.load_piece(self.image.piece_image_pos[faction][type], self.pos_to_position(pos))
 
     def decide_win(self):
         """判定输赢"""

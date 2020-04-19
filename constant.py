@@ -15,26 +15,6 @@ PIECE_INFOS = {  # 棋子信息
         "炮": "砲",
         "兵": "卒"
     },
-    "image": {  # 棋子图片路径
-        "红": {
-            "帅": "./resources/红帅.png",
-            "仕": "./resources/红仕.png",
-            "相": "./resources/红相.png",
-            "馬": "./resources/红马.png",
-            "車": "./resources/红车.png",
-            "炮": "./resources/红炮.png",
-            "兵": "./resources/红兵.png"
-        },
-        "黑": {
-            "将": "./resources/黑将.png",
-            "士": "./resources/黑士.png",
-            "象": "./resources/黑象.png",
-            "马": "./resources/黑马.png",
-            "车": "./resources/黑车.png",
-            "砲": "./resources/黑炮.png",
-            "卒": "./resources/黑卒.png"
-        }
-    },
     "FEN": {
         "帅": "K",
         "仕": "A",
@@ -54,6 +34,8 @@ PIECE_INFOS = {  # 棋子信息
         "黑": "b"
     }
 }
+PIECE_IMAGE_PATH = "./resources/pieces.png"  # 棋子图片位置
+PIECE_SIZE = (86, 86)  # 每颗棋子的大小
 PIECE_BOARD_IMAGE_PATH = "./resources/棋子.png"  # 棋子背景图片
 HEADERS = {  # 网络请求头
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:76.0) Gecko/20100101 Firefox/76.0"
